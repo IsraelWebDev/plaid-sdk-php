@@ -258,6 +258,7 @@ class Plaid
 	 * @param string|null $redirect_uri
 	 * @param string|null $android_package_name
 	 * @param string|null $payment_id
+	 * @param string|null $precheck_id
 	 * @return object
 	 */
 	public function createLinkToken(
@@ -272,7 +273,8 @@ class Plaid
 		?string $access_token = null,
 		?string $redirect_uri = null,
 		?string $android_package_name = null,
-		?string $payment_id = null): object {
+		?string $payment_id = null,
+		?string $precheck_id = null): object {
 
 		$params = [
 			"client_name" => $client_name,
@@ -311,6 +313,12 @@ class Plaid
 		if( $payment_id ){
 			$params["payment_initiation"] = [
 				"payment_id" => $payment_id
+			];
+		}
+
+		if( $precheck_id ){
+			$params["income_verification"] = [
+				"precheck_id" => $precheck_id
 			];
 		}
 
@@ -662,6 +670,40 @@ class Plaid
 
 		return $this->doRequest(
 			$this->buildRequest("post", "income/get", $this->clientCredentials($params))
+		);
+	}
+
+	/**
+	 * Get an Item's income information.
+	 *
+	 * @param array $params for user and employer
+	 * @return object with precheck_id and confidence
+	 */
+	public function getIncomePrecheck(array $params = []): object
+	{
+		/*$params = [
+			"access_token" => $access_token
+		];*/
+
+		return $this->doRequest(
+			$this->buildRequest("post", "income/verification/precheck", $this->clientCredentials($params))
+		);
+	}
+
+	/**
+	 * Get an Item's income information.
+	 *
+	 * @param string $access_token
+	 * @return object
+	 */
+	public function getIncomePaystubs(string $access_token): object
+	{
+		$params = [
+			"access_token" => $access_token
+		];
+
+		return $this->doRequest(
+			$this->buildRequest("post", "income/verification/paystubs/get", $this->clientCredentials($params))
 		);
 	}
 
