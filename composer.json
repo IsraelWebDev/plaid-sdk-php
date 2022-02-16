@@ -1,6 +1,6 @@
 {
-    "name": "tomorrow-ideas/plaid-sdk-php",
-    "description": "PHP implementation of Plaid's API as an SDK.",
+    "name": "israelwebdev/plaid-sdk-php",
+    "description": "PHP implementation of Plaid's API as an SDK (Income enhanced).",
     "keywords": [
         "plaid",
         "sdk",
@@ -34,6 +34,10 @@
         {
             "name": "Brent Scheffler",
             "email": "brent@tomorrow.me"
+        },
+        {
+            "name": "Zvi Landsman",
+            "email": "zvi@israelwebdev.com"
         }
     ]
 }
