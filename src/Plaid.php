@@ -412,19 +412,55 @@ class Plaid
 	}
 
 	/**
-	 * Create a new Item public token.
+	 * Create a new public token.
 	 *
-	 * @param string $access_token
+	 * @param string $institution_id
+	 * @param array $initial_products
+	 * @param array $options
+	 * @throws PlaidRequestException
 	 * @return object
 	 */
-	public function createPublicToken(string $access_token): object
+	public function createPublicToken(
+		string $institution_id,
+		array $initial_products,
+		array $options = []): object
 	{
 		$params = [
-			"access_token" => $access_token
+			"institution_id" => $institution_id,
+			"initial_products" => $initial_products,
+			"options" => (object) $options
 		];
 
 		return $this->doRequest(
-			$this->buildRequest("post", "item/public_token/create", $this->clientCredentials($params))
+			$this->buildRequest(
+			"post",
+			"sandbox/public_token/create",
+			$this->clientCredentials($params))
+		);
+	}
+
+	/**
+	 * Fire off a webhook event for an Item.
+	 *
+	 * @param string $access_token
+	 * @param string $webhook_code
+	 * @throws PlaidRequestException
+	 * @return object
+	 */
+	public function fireWebhook(
+		string $access_token,
+		string $webhook_code = "DEFAULT_UPDATE"): object
+	{
+		$params = [
+			"access_token" => $access_token,
+			"webhook_code" => $webhook_code
+		];
+
+		return $this->doRequest(
+			$this->buildRequest(
+			"post",
+			"sandbox/item/fire_webhook",
+			$this->clientCredentials($params))
 		);
 	}
 
