@@ -274,7 +274,8 @@ class Plaid
 		?string $redirect_uri = null,
 		?string $android_package_name = null,
 		?string $payment_id = null,
-		?string $precheck_id = null): object {
+		?string $precheck_id = null,
+		?bool $income_insights = null): object {
 
 		$params = [
 			"client_name" => $client_name,
@@ -319,6 +320,13 @@ class Plaid
 		if( $precheck_id ){
 			$params["income_verification"] = [
 				"precheck_id" => $precheck_id
+			];
+		}
+		
+		if(in_array("assets", $products) && ($income_insights !== null)){
+			$params["asset_report"] = [
+				"bank_income_insights_enabled" => $income_insights,
+				"days_requested" => 60
 			];
 		}
 
@@ -749,18 +757,15 @@ class Plaid
 	 * @param array<string> $access_tokens
 	 * @param integer $days_requested
 	 * @param array<string,string> $options
-	 * @param boolean $income_insights
 	 * @return object
 	 */
-	public function createAssetReport(array $access_tokens, int $days_requested, array $options = [], bool $income_insights = null): object
+	public function createAssetReport(array $access_tokens, int $days_requested, array $options = []): object
 	{
 		$params = [
 			'access_tokens' => $access_tokens,
 			'days_requested' => $days_requested,
 			'options' => (object) $options
 		];
-		if($income_insights !== null)
-			$params['bank_income_insights_enabled'] = $income_insights;
 
 		return $this->doRequest(
 			$this->buildRequest("post", "asset_report/create", $this->clientCredentials($params))
