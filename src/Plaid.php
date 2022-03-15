@@ -749,15 +749,18 @@ class Plaid
 	 * @param array<string> $access_tokens
 	 * @param integer $days_requested
 	 * @param array<string,string> $options
+	 * @param boolean $income_insights
 	 * @return object
 	 */
-	public function createAssetReport(array $access_tokens, int $days_requested, array $options = []): object
+	public function createAssetReport(array $access_tokens, int $days_requested, array $options = [], bool $income_insights = null): object
 	{
 		$params = [
 			'access_tokens' => $access_tokens,
 			'days_requested' => $days_requested,
 			'options' => (object) $options
 		];
+		if($income_insights !== null)
+			$params['bank_income_insights_enabled'] = $income_insights;
 
 		return $this->doRequest(
 			$this->buildRequest("post", "asset_report/create", $this->clientCredentials($params))
