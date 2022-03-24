@@ -275,7 +275,7 @@ class Plaid
 		?string $android_package_name = null,
 		?string $payment_id = null,
 		?string $precheck_id = null,
-		?bool $income_insights = null): object {
+		?int $income_insight_days = null): object {
 
 		$params = [
 			"client_name" => $client_name,
@@ -323,10 +323,10 @@ class Plaid
 			];
 		}
 		
-		if(in_array("assets", $products) && ($income_insights !== null)){
+		if(in_array("assets", $products) && ($income_insight_days !== null)){
 			$params["asset_report"] = [
-				"bank_income_insights_enabled" => $income_insights,
-				"days_requested" => 60
+				"bank_income_insights_enabled" => $income_insight_days > 0,
+				"days_requested" => $income_insight_days
 			];
 		}
 
